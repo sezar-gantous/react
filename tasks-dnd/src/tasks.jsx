@@ -7,7 +7,12 @@ const Container = styled.div`
   padding: 8px;
   border: 1px solid lightgrey;
   border-radius: 2px;
-  background: ${props => (props.isDragging ? "lightgreen" : "white")};
+  background-color: ${props =>
+    props.isDragDisabled
+      ? "lightgrey"
+      : props.isDragging
+        ? "lightgreen"
+        : "white"};
 `;
 
 export default class Task extends React.Component {
@@ -20,6 +25,7 @@ export default class Task extends React.Component {
             {...provided.dragHandleProps}
             innerRef={provided.innerRef}
             isDragging={snapshot.isDragging}
+            aria-roledescription="Press space bar to lift the task"
           >
             {this.props.task.content}
           </Container>
