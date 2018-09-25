@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<App/> matches the snapshot 1`] = `
+<div
+  className="App"
+>
+  <header
+    className="App-header"
+  >
+    <img
+      alt="logo"
+      className="App-logo"
+      src="logo.svg"
+    />
+    <h1
+      className="App-title"
+    >
+      Welcome to React
+    </h1>
+  </header>
+  <ul>
+    <li>
+      Test 1
+    </li>
+    <li>
+      Test 2
+    </li>
+    <li>
+      Test 3
+    </li>
+  </ul>
+  <p
+    className="App-intro"
+  >
+    Hello World
+  </p>
+</div>
+`;
