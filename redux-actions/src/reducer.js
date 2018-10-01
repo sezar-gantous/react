@@ -3,113 +3,179 @@ import {
   createTodo,
   updateTodo,
   destroyTodo
-} from './lib/todoServices'
+} from "./lib/todoServices";
+
+import { createActions, handleActions, combineActions } from "redux-actions";
+import reduceReducers from "reduce-reducers";
+import { combineReducers } from "C:/Users/sezar/AppData/Local/Microsoft/TypeScript/3.0/node_modules/@types/reduce-reducers/node_modules/redux";
 
 const initState = {
   todos: [],
-  currentTodo: '',
+  currentTodo: "",
   isLoading: true,
-  message: ''
-}
+  message: ""
+};
 
-const UPDATE_CURRENT = 'UPDATE_CURRENT'
-const ADD_TODO = 'ADD_TODO'
-const LOAD_TODOS = 'LOAD_TODOS'
-const REPLACE_TODO = 'REPLACE_TODO'
-const REMOVE_TODO = 'REMOVE_TODO'
-const SHOW_LOADER = 'SHOW_LOADER'
-const HIDE_LOADER = 'HIDE_LOADER'
+const UPDATE_CURRENT = "UPDATE_CURRENT";
+const ADD_TODO = "ADD_TODO";
+const LOAD_TODOS = "LOAD_TODOS";
+const REPLACE_TODO = "REPLACE_TODO";
+const REMOVE_TODO = "REMOVE_TODO";
+const SHOW_LOADER = "SHOW_LOADER";
+const HIDE_LOADER = "HIDE_LOADER";
 
-export const updateCurrent = val => ({ type: UPDATE_CURRENT, payload: val })
-export const loadTodos = todos => ({ type: LOAD_TODOS, payload: todos })
-export const addTodo = todo => ({ type: ADD_TODO, payload: todo })
-export const replaceTodo = todo => ({ type: REPLACE_TODO, payload: todo })
-export const removeTodo = id => ({ type: REMOVE_TODO, payload: id })
+const fixCase = str =>
+  `${str.slice(0, 1).toUpperCase()}${str.slice(1).toLowerCase()}`;
+
+/* const fixCase = str => {
+  return str.split("").reduce((acc, letter, index) => {
+    return index === 0 ? letter.toUpperCase() : `${acc}${letter.toLowerCase()}`;
+  }, "");
+}; */
+
+export const {
+  updateCurrent,
+  loadTodos,
+  addTodo,
+  replaceTodo,
+  removeTodo,
+  showLoader,
+  hideLoader
+} = createActions(
+  {
+    UPDATE_CURRENT: fixCase,
+    SHOW_LOADER: () => true,
+    HIDE_LOADER: () => false,
+    ADD_TODO: [x => x, (_, name) => ({ name })]
+  },
+  LOAD_TODOS,
+  REPLACE_TODO,
+  REMOVE_TODO
+);
+
+//export const updateCurrent = val => ({ type: UPDATE_CURRENT, payload: val })
+//FSA
+
+/* export const updateCurrent = createAction(UPDATE_CURRENT, fixCase);
+export const loadTodos = createAction(LOAD_TODOS)
+export const addTodo = createAction(ADD_TODO)
+export const replaceTodo = createAction(REPLACE_TODO)
+export const removeTodo = createAction(REMOVE_TODO)
 export const showLoader = () => ({ type: SHOW_LOADER, payload: true })
 export const hideLoader = () => ({ type: HIDE_LOADER, payload: false })
-
+ */
 export const fetchTodos = () => {
   return dispatch => {
-    dispatch(showLoader())
-    getTodos().then(todos => {
-      dispatch(loadTodos(todos))
-      dispatch(hideLoader())
-    })
-  }
-}
+    dispatch(showLoader());
+    getTodos()
+      .then(todos => {
+        dispatch(loadTodos(todos));
+        dispatch(hideLoader());
+      })
+      .catch(err => {
+        dispatch(loadTodos(err));
+        dispatch(hideLoader());
+      });
+  };
+};
 
 export const saveTodo = name => {
   return dispatch => {
-    dispatch(showLoader())
-    createTodo(name).then(res => {
-      dispatch(addTodo(res))
-      dispatch(hideLoader())
-    })
-  }
-}
+    dispatch(showLoader());
+    createTodo(name)
+      .then(res => {
+        dispatch(addTodo(res));
+        dispatch(hideLoader());
+      })
+      .catch(err => {
+        dispatch(addTodo(err, name));
+        dispatch(hideLoader());
+      });
+  };
+};
 
 export const toggleTodo = id => {
   return (dispatch, getState) => {
-    dispatch(showLoader())
-    const { todos } = getState()
-    const todo = todos.find(t => t.id === id)
-    const toggled = { ...todo, isComplete: !todo.isComplete }
+    dispatch(showLoader());
+    const { todos } = getState();
+    const todo = todos.find(t => t.id === id);
+    const toggled = { ...todo, isComplete: !todo.isComplete };
     updateTodo(toggled).then(res => {
-      dispatch(replaceTodo(res))
-      dispatch(hideLoader())
-    })
-  }
-}
+      dispatch(replaceTodo(res));
+      dispatch(hideLoader());
+    });
+  };
+};
 
 export const deleteTodo = id => {
   return dispatch => {
-    dispatch(showLoader())
+    dispatch(showLoader());
     destroyTodo(id).then(() => {
-      dispatch(removeTodo(id))
-      dispatch(hideLoader())
-    })
-  }
-}
+      dispatch(removeTodo(id));
+      dispatch(hideLoader());
+    });
+  };
+};
 
 export const getVisibleTodos = (todos, filter) => {
   switch (filter) {
-    case 'active':
-      return todos.filter(t => !t.isComplete)
-    case 'completed':
-      return todos.filter(t => t.isComplete)
+    case "active":
+      return todos.filter(t => !t.isComplete);
+    case "completed":
+      return todos.filter(t => t.isComplete);
     default:
-      return todos
+      return todos;
   }
-}
+};
 
-export default (state = initState, action) => {
-  switch (action.type) {
-    case ADD_TODO:
-      return {
-        ...state,
-        currentTodo: '',
-        todos: state.todos.concat(action.payload)
+export default handleActions(
+  {
+    ADD_TODO: {
+      next: (state, action) => {
+        return {
+          ...state,
+          currentTodo: "",
+          todos: state.todos.concat(action.payload)
+        };
+      },
+      throw: (state, action) => {
+        return {
+          ...state,
+          message: `There was a problem saving the todo ${action.meta.name}`
+        };
       }
-    case LOAD_TODOS:
-      return { ...state, todos: action.payload }
-    case UPDATE_CURRENT:
-      return { ...state, currentTodo: action.payload }
-    case REPLACE_TODO:
+    },
+    LOAD_TODOS: {
+      next: (state, action) => {
+        return { ...state, todos: action.payload };
+      },
+      throw: (state, action) => {
+        return {
+          ...state,
+          message: action.payload.message
+        };
+      }
+    },
+    UPDATE_CURRENT: (state, action) => {
+      return { ...state, currentTodo: action.payload };
+    },
+    REPLACE_TODO: (state, action) => {
       return {
         ...state,
         todos: state.todos.map(
           t => (t.id === action.payload.id ? action.payload : t)
         )
-      }
-    case REMOVE_TODO:
+      };
+    },
+    REMOVE_TODO: (state, action) => {
       return {
         ...state,
         todos: state.todos.filter(t => t.id !== action.payload)
-      }
-    case SHOW_LOADER:
-    case HIDE_LOADER:
-      return { ...state, isLoading: action.payload }
-    default:
-      return state
-  }
-}
+      };
+    },
+    [combineActions(SHOW_LOADER, HIDE_LOADER)]: (state, action) => {
+      return { ...state, isLoading: action.payload };
+    }
+  },
+  initState
+);
