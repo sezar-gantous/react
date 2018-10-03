@@ -1,3 +1,9 @@
+## Drag and Drop demo
+A react app with react-beautiful-dnd.
+Full course: https://egghead.io/courses/beautiful-and-accessible-drag-and-drop-with-react-beautiful-dnd
+
+------
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>
