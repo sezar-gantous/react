@@ -1,9 +1,9 @@
-## Todo app Demo
+## Todo app demo
 
 Production quality Todo app built with React and testing using jest.
 Full course: https://egghead.io/courses/build-your-first-production-quality-react-app
 
-##
+---
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
