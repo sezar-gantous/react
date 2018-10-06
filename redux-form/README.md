@@ -1,3 +1,11 @@
+## Redux Form demo
+
+using redux-form to handel a form.
+Full course: https://egghead.io/courses/manage-react-form-state-with-redux-form
+
+---
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>
