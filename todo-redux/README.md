@@ -1,7 +1,7 @@
 ## Todo app demo
 
-Production quality Todo app built with React and testing using jest.
-Full course: https://egghead.io/courses/build-your-first-production-quality-react-app
+Production quality Todo app built with React, Redux, Thunk, router and testing using jest.
+Full course: https://egghead.io/courses/build-a-react-app-with-redux
 
 ----
 
