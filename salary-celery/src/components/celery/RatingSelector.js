@@ -138,7 +138,7 @@ class RatingSelector extends Component {
   printSelector = classes => {
     const { jobTitle, yearsOfExperience, ratingLabels } = this.props.celery;
 
-    console.log(jobTitle);
+    //console.log(jobTitle);
     if (jobTitle.length > 0 && yearsOfExperience.length > 0) {
       return (
         <Grid container spacing={0}>

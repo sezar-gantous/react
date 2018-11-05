@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import RatingSelector from "./RatingSelector";
-import NumberFormat from "react-number-format";
 import { withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
+import AnimatedProgressBar from "./AnimatedProgressBar";
+import { DollarPrefixedInput, DecimalNumberInput } from "../customInputs";
 import {
   LABEL_ROTTEN,
   LABEL_NOTBAD,
@@ -15,7 +15,10 @@ import {
   INPUT_LABEL_JOBTITLE,
   INPUT_LABEL_YEARSOFEXPERIENCE,
   INPUT_LABEL_LOCATION,
-  INPUT_PLACEHOLDER_JOBTITLE
+  INPUT_PLACEHOLDER_JOBTITLE,
+  INPUT_LABEL_SALARY,
+  INPUT_NAME_SALARY,
+  INPUT_PLACEHOLDER_SALARY
 } from "../../lib/strings";
 
 const styles = theme => ({
@@ -29,31 +32,11 @@ const styles = theme => ({
   }
 });
 
-const NumberFormatCustom = props => {
-  const { inputRef, onChange, ...other } = props;
-
-  return (
-    <NumberFormat
-      {...other}
-      getInputRef={inputRef}
-      onValueChange={values => {
-        onChange({ target: { value: values.value } });
-      }}
-      allowNegative={false}
-      decimalScale={1}
-    />
-  );
-};
-
-NumberFormatCustom.propTypes = {
-  inputRef: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired
-};
-
 class Celery extends Component {
   state = {
     celery: {
       jobTitle: "",
+      salary: "",
       yearsOfExperience: "",
       location: "",
       ratingLabels: [LABEL_ROTTEN, LABEL_NOTBAD, LABEL_GREAT],
@@ -75,8 +58,8 @@ class Celery extends Component {
     let min = 0,
       max = 0;
     if (this.state.celery.jobTitle.length > 0) {
-      min = 30;
-      max = 120;
+      min = 30000;
+      max = 120000;
     }
 
     let celery = Object.assign({}, this.state.celery);
@@ -85,6 +68,7 @@ class Celery extends Component {
 
     this.setState({ celery });
   };
+
   render() {
     const { classes } = this.props;
     return (
@@ -95,7 +79,7 @@ class Celery extends Component {
             label={INPUT_LABEL_JOBTITLE}
             name={INPUT_NAME_JOBTITLE}
             placeholder={INPUT_PLACEHOLDER_JOBTITLE}
-            value={this.state.jobTitle}
+            value={this.state.celery.jobTitle}
             className={classes.textField}
             fullWidth
             margin="none"
@@ -109,12 +93,12 @@ class Celery extends Component {
             label={INPUT_LABEL_YEARSOFEXPERIENCE}
             name={INPUT_NAME_YEARSOFEXPERIENCE}
             className={classes.textField}
-            value={this.state.yearsOfExperience}
+            value={this.state.celery.yearsOfExperience}
             margin="none"
             fullWidth
             variant="outlined"
             onChange={this.handleInputChange(INPUT_NAME_YEARSOFEXPERIENCE)}
-            InputProps={{ inputComponent: NumberFormatCustom }}
+            InputProps={{ inputComponent: DecimalNumberInput }}
           />
         </Grid>
         <Grid item xs={6}>
@@ -123,7 +107,7 @@ class Celery extends Component {
             label={INPUT_LABEL_LOCATION}
             name={INPUT_NAME_LOCATION}
             className={classes.textField}
-            value={this.state.location}
+            value={this.state.celery.location}
             margin="none"
             fullWidth
             variant="outlined"
@@ -131,8 +115,24 @@ class Celery extends Component {
           />
         </Grid>
         <Grid item xs={12}>
+          <TextField
+            id="input-salary"
+            label={INPUT_LABEL_SALARY}
+            name={INPUT_NAME_SALARY}
+            placeholder={INPUT_PLACEHOLDER_SALARY}
+            value={this.state.celery.salary}
+            className={classes.textField}
+            fullWidth
+            margin="none"
+            variant="outlined"
+            onChange={this.handleInputChange(INPUT_NAME_SALARY)}
+            InputProps={{ inputComponent: DollarPrefixedInput }}
+          />
+        </Grid>
+
+        <Grid item xs={12}>
           <br />
-          <RatingSelector celery={this.state.celery} />
+          <AnimatedProgressBar celery={this.state.celery} />
         </Grid>
       </Grid>
     );

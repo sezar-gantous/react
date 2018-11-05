@@ -1,15 +1,38 @@
 import "react-app-polyfill/ie11";
-import "typeface-roboto";
 import React from "react";
 import { render } from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import "./index.css";
+import "typeface-kreon";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
+const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+    // Use the system font instead of the default Roboto font.
+    fontFamily: [
+      "kreon",
+      "-apple-system",
+      "BlinkMacSystemFont",
+      '"Segoe UI"',
+      "Roboto",
+      '"Helvetica Neue"',
+      "Arial",
+      "sans-serif",
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"'
+    ].join(",")
+  }
+});
+
 render(
   <BrowserRouter>
-    <App />
+    <MuiThemeProvider theme={theme}>
+      <App />
+    </MuiThemeProvider>
   </BrowserRouter>,
   document.getElementById("root")
 );
