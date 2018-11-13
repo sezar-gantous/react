@@ -17,7 +17,7 @@ const styles = theme => ({
 class App extends Component {
   render() {
     const { classes } = this.props;
-
+    console.log(this.props.location);
     return (
       <Grid container className={cx(App, classes.root)} justify="center">
         <Grid item xs={12} md={6} lg={4}>

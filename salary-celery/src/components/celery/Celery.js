@@ -3,8 +3,10 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
+import LinearProgress from "@material-ui/core/LinearProgress";
 import AnimatedProgressBar from "./AnimatedProgressBar";
 import { DollarPrefixedInput, DecimalNumberInput } from "../customInputs";
+import { API_getSalary } from "../../lib/service";
 import {
   LABEL_ROTTEN,
   LABEL_NOTBAD,
@@ -29,6 +31,12 @@ const styles = theme => ({
     flexGrow: 1,
     paddingLeft: theme.spacing.unit,
     paddingRight: theme.spacing.unit
+  },
+  colorPrimary: {
+    backgroundColor: "#DFF6EB"
+  },
+  barColorPrimary: {
+    backgroundColor: "#7ABB93"
   }
 });
 
@@ -43,29 +51,51 @@ class Celery extends Component {
       selectedRating: "",
       ratingMin: "",
       ratingMax: ""
-    }
+    },
+    errorMsg: "",
+    showLoading: false
   };
 
   handleInputChange = name => e => {
     let celery = Object.assign({}, this.state.celery);
     celery[name] = e.target.value;
     this.setState({ celery }, () => {
-      name === INPUT_NAME_JOBTITLE && this.setRating();
+      name === INPUT_NAME_JOBTITLE && this.updateRating();
     });
   };
 
-  setRating = () => {
-    let min = 0,
-      max = 0;
-    if (this.state.celery.jobTitle.length > 0) {
-      min = 30000;
-      max = 120000;
-    }
+  updateRating = () => {
+    this.setState({ showLoading: false });
 
+    let job = this.state.celery.jobTitle.toLowerCase().trim();
+    if (job.length > 0) {
+      this.setState({ showLoading: true });
+      API_getSalary(job)
+        .then(res => {
+          let min = 0,
+            max = 0;
+          if (res.length > 0) {
+            this.setState({ showLoading: false });
+            min = res[0].ratingMin;
+            max = res[0].ratingMax;
+          }
+          this.setRating(min, max);
+        })
+        .catch(err => {
+          this.setState({ showLoading: false });
+          ///TODO
+          ///show err to user
+          console.log(err);
+        });
+    } else {
+      this.setRating(0, 0);
+    }
+  };
+
+  setRating = (min, max) => {
     let celery = Object.assign({}, this.state.celery);
     celery.ratingMin = min;
     celery.ratingMax = max;
-
     this.setState({ celery });
   };
 
@@ -132,7 +162,24 @@ class Celery extends Component {
 
         <Grid item xs={12}>
           <br />
-          <AnimatedProgressBar celery={this.state.celery} />
+          <AnimatedProgressBar
+            celery={this.state.celery}
+            style={
+              this.state.showLoading
+                ? { display: "none" }
+                : { display: "block" }
+            }
+          />
+          {this.state.showLoading ? (
+            <LinearProgress
+              classes={{
+                colorPrimary: classes.colorPrimary,
+                barColorPrimary: classes.barColorPrimary
+              }}
+            />
+          ) : (
+            ""
+          )}
         </Grid>
       </Grid>
     );

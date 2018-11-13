@@ -1,6 +1,6 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
-import { SalaryCelery, About } from "../pages";
+import { SalaryCelery, About, SignIn } from "../pages";
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
@@ -22,6 +22,7 @@ const Main = props => {
         <Switch>
           <Route exact path="/" component={SalaryCelery} />
           <Route path="/about" component={About} />
+          <Route path="/login" component={SignIn} />
         </Switch>
       </Grid>
     </Grid>

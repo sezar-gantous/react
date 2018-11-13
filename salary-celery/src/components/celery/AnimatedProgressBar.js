@@ -71,7 +71,10 @@ class AnimatedProgressBar extends Component {
   };
 
   componentDidUpdate = prevProps => {
-    if (this.props.celery.salary !== prevProps.celery.salary) {
+    if (
+      this.props.celery.ratingMax !== prevProps.celery.ratingMax ||
+      this.props.celery.salary !== prevProps.celery.salary
+    ) {
       this.updateUI();
     }
   };

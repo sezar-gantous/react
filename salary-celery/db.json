@@ -1,0 +1,24 @@
+{
+  "salaries": [
+    {
+      "jobTitle": "developer",
+      "ratingMin": "30000",
+      "ratingMax": "120000"
+    },
+    {
+      "jobTitle": "teacher",
+      "ratingMin": "30000",
+      "ratingMax": "90000"
+    },
+    {
+      "jobTitle": "doctor",
+      "ratingMin": "72000",
+      "ratingMax": "250000"
+    },
+    {
+      "jobTitle": "lawer",
+      "ratingMin": "90000",
+      "ratingMax": "245000"
+    }
+  ]
+}

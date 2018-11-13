@@ -12,3 +12,6 @@ export const INPUT_LABEL_LOCATION = "Location";
 export const INPUT_LABEL_SALARY = "Salary";
 export const INPUT_PLACEHOLDER_JOBTITLE = "What's your job Title?";
 export const INPUT_PLACEHOLDER_SALARY = "What's your Salary?";
+export const MENU_LABEL_HOME = "Salary Celery";
+export const MENU_LABEL_ABOUT = "About";
+export const MENU_LABEL_SIGNIN = "Sign In";
