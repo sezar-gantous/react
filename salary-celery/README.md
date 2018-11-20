@@ -1,4 +1,4 @@
-## Live Demo with out DB: https://salary-celery-proptotype.netlify.com/
+## Live Demo without DB: https://salary-celery-proptotype.netlify.com/
 
 ```
 cd celery
